@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>上传审核素材</title>
+  <script type="module" crossorigin src="./assets/index.d672eb0b.js"></script>
+  <link rel="stylesheet" href="./assets/index.145f78e9.css">
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- 左侧菜单栏 -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h5 class="sidebar-title">插件功能</h5>
+      </div>
+      <div class="sidebar-menu">
+        <div class="menu-item active" id="uploadMaterialMenu">
+          <div class="menu-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <span class="menu-text">上传</span>
+        </div>
+          <div class="menu-item" id="auditMenu">
+            <div class="menu-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9,5V9H21V5M9,19H21V15H9M9,13H21V11H9M4,9H8V5H4M4,19H8V15H4M4,13H8V11H4V13Z" fill="currentColor"/>
+              </svg>
+            </div>
+            <span class="menu-text">查看/审核</span>
+          </div>
+          <div class="menu-item" id="exportMenu">
+            <div class="menu-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" fill="currentColor"/>
+              </svg>
+            </div>
+            <span class="menu-text">导出</span>
+          </div>
+      </div>
+    </div>
+
+    <!-- 右侧内容区 -->
+    <div class="main-content">
+      <div class="content-header">
+        <h4 class="content-title" id="pageTitle">上传审核素材</h4>
+      </div>
+
+      <div class="content-body">
+        <!-- Tab切换 -->
+        <ul class="nav nav-tabs" id="uploadTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="media-tab" data-bs-toggle="tab" data-bs-target="#media" type="button" role="tab">上传图片/视频</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="excel-tab" data-bs-toggle="tab" data-bs-target="#excel" type="button" role="tab">上传Excel</button>
+          </li>
+        </ul>
+
+        <!-- Tab内容 -->
+        <div class="tab-content" id="uploadTabsContent">
+          <!-- 图片/视频上传tab -->
+          <div class="tab-pane fade show active" id="media" role="tabpanel">
+            <div class="upload-config">
+              <!-- 字段选择 -->
+              <div class="field-selection mb-4">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label for="attachmentFieldSelect" class="form-label">选择附件字段</label>
+                    <select id="attachmentFieldSelect" class="form-select">
+                      <option value="">请选择附件字段</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="nameFieldSelect" class="form-label">选择文件名字段</label>
+                    <select id="nameFieldSelect" class="form-select">
+                      <option value="">请选择文本字段</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 文件上传区域 -->
+              <div class="upload-area mb-4">
+                <label for="fileInput" class="upload-zone" id="uploadZone">
+                  <div class="upload-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" fill="currentColor" opacity="0.5"/>
+                    </svg>
+                  </div>
+                  <div class="upload-text">
+                    <p class="upload-primary">点击选择文件或拖拽文件到此处</p>
+                    <p class="upload-secondary">支持 JPG、PNG、MP4、AVI 等格式</p>
+                  </div>
+                  <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display: none;">
+                </label>
+
+                <!-- 清除文件按钮 -->
+                <div class="clear-files mt-2" id="clearFiles" style="display: none;">
+                  <button type="button" class="btn btn-sm btn-outline-secondary" id="clearBtn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                      <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+                    </svg>
+                    清除文件
+                  </button>
+                </div>
+              </div>
+
+              <!-- 上传按钮 -->
+              <div class="upload-actions">
+                <button type="button" class="btn btn-primary" id="uploadBtn" disabled>
+                  上传文件
+                </button>
+              </div>
+
+              <!-- 上传进度 -->
+              <div class="upload-progress mt-3" id="uploadProgress" style="display: none;">
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                </div>
+                <div class="progress-text mt-2">
+                  <span id="progressText">准备上传...</span>
+                </div>
+              </div>
+
+              <!-- 错误提示 -->
+              <div class="error-messages mt-3" id="errorMessages" style="display: none;">
+                <div class="alert alert-danger">
+                  <h6>上传失败的文件：</h6>
+                  <ul id="errorFileList"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Excel上传tab -->
+          <div class="tab-pane fade" id="excel" role="tabpanel">
+            <div class="excel-upload-config">
+              <!-- Excel文件上传区域 -->
+              <div class="upload-area mb-4">
+                <label for="excelFileInput" class="upload-zone" id="excelUploadZone">
+                  <div class="upload-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" fill="currentColor" opacity="0.5"/>
+                    </svg>
+                  </div>
+                  <div class="upload-text">
+                    <p class="upload-primary">点击选择Excel文件</p>
+                    <p class="upload-secondary">支持 XLSX、XLS、CSV 格式，文件大小不超过100MB</p>
+                  </div>
+                  <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" style="display: none;">
+                </label>
+
+                <!-- 已选择文件显示 -->
+                <div class="selected-file mt-2" id="selectedExcelFile" style="display: none;">
+                  <div class="file-info">
+                    <span class="file-name" id="excelFileName"></span>
+                    <span class="file-size" id="excelFileSize"></span>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-danger" id="removeExcelFile">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Sheet选择 -->
+              <div class="form-group mb-4" id="sheetSelector" style="display: none;">
+                <label for="sheetSelect" class="form-label">选择上传的excel工作表</label>
+                <select id="sheetSelect" class="form-select">
+                  <option value="">请选择工作表</option>
+                </select>
+              </div>
+
+
+              <!-- 字段对应关系 -->
+              <div class="field-mapping mb-4" id="fieldMapping" style="display: none;">
+                <h6 class="mapping-title">字段对应关系</h6>
+                <div class="mapping-header">
+                  <div class="mapping-column">
+                    <span>多维表格字段</span>
+                  </div>
+                  <div class="mapping-column">
+                    <span>Excel字段</span>
+                  </div>
+                </div>
+                <div class="mapping-body" id="fieldMappingBody">
+                  <!-- 动态生成的字段映射行 -->
+                </div>
+              </div>
+
+              <!-- 导入模式 -->
+              <div class="form-group mb-4">
+                <label class="form-label">选择添加模式</label>
+                <div class="import-mode">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="importMode" id="insertMode" value="insert" checked>
+                    <label class="form-check-label" for="insertMode">
+                      批量增加记录
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 导入按钮 -->
+              <div class="import-actions">
+                <button type="button" class="btn btn-primary" id="excelImportBtn" disabled>
+                  开始导入
+                </button>
+              </div>
+
+              <!-- 导入进度 -->
+              <div class="import-progress mt-3" id="excelImportProgress" style="display: none;">
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                </div>
+                <div class="progress-text mt-2">
+                  <span id="excelProgressText">准备导入...</span>
+                </div>
+              </div>
+
+              <!-- 导入结果 -->
+              <div class="import-result mt-3" id="excelImportResult" style="display: none;">
+                <div class="alert" id="excelResultAlert">
+                  <h6 id="excelResultTitle"></h6>
+                  <div id="excelResultContent"></div>
+                </div>
+              </div>
+
+              <!-- 错误详情 -->
+              <div class="error-details mt-3" id="excelErrorDetails" style="display: none;">
+                <div class="alert alert-danger">
+                  <h6>导入失败详情：</h6>
+                  <ul id="excelErrorList"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 审核配置界面 -->
+        <div class="audit-config-container" id="auditConfigContainer" style="display: none;">
+          <!-- 模式Tab切换 -->
+          <ul class="nav nav-tabs" id="auditModeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="audit-mode-tab" data-bs-toggle="tab" data-bs-target="#auditMode" type="button" role="tab">审核模式</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="view-mode-tab" data-bs-toggle="tab" data-bs-target="#viewMode" type="button" role="tab">查看模式</button>
+            </li>
+          </ul>
+
+          <!-- Tab内容 -->
+          <div class="tab-content" id="auditModeTabsContent">
+            <!-- 审核模式Tab内容 -->
+            <div class="tab-pane fade show active" id="auditMode" role="tabpanel">
+              <div class="audit-config-section">
+            <h5 class="section-title">审核起始记录筛选</h5>
+
+            <!-- 条件组合关系 -->
+            <div class="form-group mb-4">
+              <label class="form-label">条件组合关系</label>
+              <select id="filterConjunction" class="form-select" style="width: auto; max-width: 200px;">
+                <option value="AND">满足所有条件</option>
+                <option value="OR">满足任一条件</option>
+              </select>
+            </div>
+
+            <!-- 筛选条件区域 -->
+            <div class="filter-conditions" id="filterConditions">
+              <!-- 动态添加的筛选条件行 -->
+            </div>
+
+            <!-- 添加条件按钮 -->
+            <div class="add-condition-container">
+              <button type="button" class="btn btn-outline-primary btn-sm" id="addConditionBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+                </svg>
+                添加筛选条件
+              </button>
+            </div>
+          </div>
+
+          <div class="audit-config-section">
+            <h5 class="section-title">审核图片/视频字段</h5>
+            <div class="form-group">
+              <select id="auditAttachmentFieldSelect" class="form-select">
+                <option value="">请选择附件字段</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="audit-config-section">
+            <h5 class="section-title">审核展示信息字段</h5>
+            <div class="display-fields" id="displayFields">
+              <!-- 动态生成的字段复选框 -->
+            </div>
+          </div>
+
+          <div class="audit-config-section">
+            <h5 class="section-title">审核结果对应字段</h5>
+
+            <div class="form-group mb-3">
+              <label for="auditResultFieldSelect" class="form-label">审核结果字段（单选类型）</label>
+              <select id="auditResultFieldSelect" class="form-select">
+                <option value="">请选择审核结果字段</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="auditRemarkFieldSelect" class="form-label">审核备注字段（文本类型）</label>
+              <select id="auditRemarkFieldSelect" class="form-select">
+                <option value="">请选择审核备注字段</option>
+              </select>
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="auditStatusFieldSelect" class="form-label">审核状态更新对应字段（单选类型）</label>
+              <select id="auditStatusFieldSelect" class="form-select">
+                <option value="">请选择审核状态字段</option>
+              </select>
+              <div class="form-text">审核完成后自动更新为"已审核"状态</div>
+            </div>
+          </div>
+
+              <!-- 开始审核按钮 -->
+              <div class="audit-actions">
+                <button type="button" class="btn btn-primary" id="startAuditBtn" disabled>
+                  开始审核
+                </button>
+              </div>
+            </div>
+
+            <!-- 查看模式Tab内容 -->
+            <div class="tab-pane fade" id="viewMode" role="tabpanel">
+              <div class="audit-config-section">
+                <h5 class="section-title">查看起始记录筛选</h5>
+
+                <!-- 条件组合关系 -->
+                <div class="form-group mb-4">
+                  <label class="form-label">条件组合关系</label>
+                  <select id="viewFilterConjunction" class="form-select" style="width: auto; max-width: 350px;">
+                    <option value="AND">满足所有条件</option>
+                    <option value="OR">满足任一条件</option>
+                  </select>
+                </div>
+
+                <!-- 筛选条件区域 -->
+                <div class="filter-conditions" id="viewFilterConditions">
+                  <!-- 动态添加的筛选条件行 -->
+                </div>
+
+                <!-- 添加筛选条件按钮 -->
+                <button type="button" class="btn btn-outline-primary btn-sm" id="addViewConditionBtn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                    <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+                  </svg>
+                  添加筛选条件
+                </button>
+              </div>
+
+              <div class="audit-config-section">
+                <h5 class="section-title">查看图片/视频字段</h5>
+                <div class="form-group">
+                  <select id="viewAttachmentFieldSelect" class="form-select">
+                    <option value="">请选择附件字段</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="audit-config-section">
+                <h5 class="section-title">查看信息字段配置</h5>
+                <div class="display-fields" id="viewDisplayFields">
+                  <!-- 动态生成的字段复选框 -->
+                </div>
+              </div>
+
+              <!-- 开始查看按钮 -->
+              <div class="audit-actions">
+                <button type="button" class="btn btn-primary" id="startViewBtn" disabled>
+                  开始查看
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 审核界面 -->
+        <div class="audit-interface-container" id="auditInterfaceContainer" style="display: none;">
+          <!-- 操作按钮 -->
+          <div class="audit-reload-container mb-3">
+            <button type="button" class="btn btn-outline-primary btn-sm me-2" id="backToViewConfigBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" fill="currentColor"/>
+              </svg>
+              返回查看模式配置页
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="reloadAuditBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                <path d="M4 4V9H4.58205C5.12976 7.03437 6.85271 5.5 9 5.5C11.4853 5.5 13.5 7.51472 13.5 10C13.5 10.5523 13.0523 11 12.5 11H11.5C10.9477 11 10.5 10.5523 10.5 10C10.5 8.61929 9.38071 7.5 8 7.5C6.96465 7.5 6.05866 8.08374 5.6871 9H9V10H3V4H4Z" fill="currentColor"/>
+              </svg>
+              重新加载
+            </button>
+          </div>
+
+          <!-- 审核进度条 -->
+          <div class="audit-progress-container mb-4">
+            <div class="audit-progress-info">
+              <span id="auditProgressText">审核进度: 0 / 0</span>
+            </div>
+            <div class="progress audit-progress">
+              <div class="progress-bar bg-primary" role="progressbar" id="auditProgressBar" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- 记录信息展示 -->
+          <div class="audit-record-info mb-4">
+            <h6 class="record-info-title">记录信息</h6>
+            <div class="record-info-content" id="recordInfoContent">
+              <!-- 动态显示记录字段信息 -->
+            </div>
+          </div>
+
+          <!-- 附件预览区域 -->
+          <div class="audit-attachment-preview mb-4">
+            <div class="attachment-preview-container" id="attachmentPreviewContainer">
+              <!-- 附件预览内容 -->
+            </div>
+          </div>
+
+          <!-- 审核操作区域 -->
+          <div class="audit-actions-container">
+            <div class="audit-remark-section mb-3" id="auditRemarkSection" style="display: none;">
+              <label for="auditRemarkInput" class="form-label">审核意见备注</label>
+              <textarea class="form-control" id="auditRemarkInput" rows="3" placeholder="请输入审核意见..."></textarea>
+            </div>
+
+            <!-- 审核模式按钮 -->
+            <div class="audit-buttons" id="auditButtons">
+              <button type="button" class="btn btn-danger audit-btn" id="rejectBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" fill="currentColor"/>
+                </svg>
+                不通过
+              </button>
+              <button type="button" class="btn btn-success audit-btn" id="approveBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z" fill="currentColor"/>
+                </svg>
+                通过
+              </button>
+            </div>
+
+            <!-- 查看模式导航按钮 -->
+            <div class="view-navigation-buttons" id="viewNavigationButtons" style="display: none;">
+              <button type="button" class="btn btn-outline-secondary view-nav-btn" id="prevRecordBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                  <path d="M15,18L9,12L15,6V18Z" fill="currentColor"/>
+                </svg>
+                上一条
+              </button>
+              <button type="button" class="btn btn-outline-secondary view-nav-btn" id="nextRecordBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left: 4px;">
+                  <path d="M9,6L15,12L9,18V6Z" fill="currentColor"/>
+                </svg>
+                下一条
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 导出配置界面 -->
+        <div class="export-config-container" id="exportConfigContainer" style="display: none;">
+          <!-- 导出Tab切换 -->
+          <ul class="nav nav-tabs" id="exportTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="export-excel-tab" data-bs-toggle="tab" data-bs-target="#exportExcel" type="button" role="tab">导出Excel</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="export-attachment-tab" data-bs-toggle="tab" data-bs-target="#exportAttachment" type="button" role="tab">导出附件</button>
+            </li>
+          </ul>
+
+          <!-- 导出Tab内容 -->
+          <div class="tab-content" id="exportTabsContent">
+            <!-- 导出Excel配置 -->
+            <div class="tab-pane fade show active" id="exportExcel" role="tabpanel">
+              <div class="export-excel-config">
+                <div class="export-config-section">
+                  <h5 class="section-title">基础信息配置</h5>
+
+                  <!-- 数据表选择 -->
+                  <div class="form-group mb-4">
+                    <label for="exportTableSelect" class="form-label">选择导出的数据表</label>
+                    <select id="exportTableSelect" class="form-select">
+                      <option value="">请选择数据表</option>
+                    </select>
+                  </div>
+
+                  <!-- 视图选择 -->
+                  <div class="form-group mb-4">
+                    <label for="exportViewSelect" class="form-label">选择导出的视图</label>
+                    <select id="exportViewSelect" class="form-select">
+                      <option value="">请选择视图</option>
+                    </select>
+                  </div>
+
+                  <!-- 文件名输入 -->
+                  <div class="form-group mb-4">
+                    <label for="exportFileName" class="form-label">Excel文件名</label>
+                    <input type="text" class="form-control" id="exportFileName" placeholder="请输入Excel文件名">
+                  </div>
+                </div>
+
+                <div class="export-config-section">
+                  <h5 class="section-title">筛选导出记录</h5>
+
+                  <!-- 条件组合关系 -->
+                  <div class="form-group mb-4">
+                    <label class="form-label">条件组合关系</label>
+                    <select id="exportFilterConjunction" class="form-select">
+                      <option value="AND">满足所有条件</option>
+                      <option value="OR">满足任一条件</option>
+                    </select>
+                  </div>
+
+                  <!-- 筛选条件区域 -->
+                  <div class="filter-conditions" id="exportFilterConditions">
+                    <!-- 动态添加的筛选条件行 -->
+                  </div>
+
+                  <!-- 添加条件按钮 -->
+                  <div class="add-condition-container">
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="addExportConditionBtn">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+                      </svg>
+                      添加筛选条件
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 导出按钮 -->
+                <div class="export-actions">
+                  <button type="button" class="btn btn-primary" id="exportExcelBtn" disabled>
+                    开始导出Excel
+                  </button>
+                </div>
+
+                <!-- 导出进度 -->
+                <div class="export-progress mt-3" id="exportProgress" style="display: none;">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                  </div>
+                  <div class="progress-text mt-2">
+                    <span id="exportProgressText">准备导出...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 导出附件配置 -->
+            <div class="tab-pane fade" id="exportAttachment" role="tabpanel">
+              <div class="export-attachment-config">
+                <div class="export-config-section">
+                  <h5 class="section-title">附件导出配置</h5>
+
+                  <!-- 数据表选择 -->
+                  <div class="form-group mb-4">
+                    <label for="attachmentExportTableSelect" class="form-label">选择导出的数据表</label>
+                    <select id="attachmentExportTableSelect" class="form-select">
+                      <option value="">请选择数据表</option>
+                    </select>
+                  </div>
+
+                  <!-- 视图选择 -->
+                  <div class="form-group mb-4">
+                    <label for="attachmentExportViewSelect" class="form-label">选择导出的视图</label>
+                    <select id="attachmentExportViewSelect" class="form-select">
+                      <option value="">请选择视图</option>
+                    </select>
+                  </div>
+
+                  <!-- 附件字段选择 -->
+                  <div class="form-group mb-4">
+                    <label for="attachmentExportFieldSelect" class="form-label">选择导出的附件对应字段</label>
+                    <select id="attachmentExportFieldSelect" class="form-select">
+                      <option value="">请选择附件字段</option>
+                    </select>
+                  </div>
+
+                  <!-- 压缩文件名输入 -->
+                  <div class="form-group mb-4">
+                    <label for="attachmentExportZipName" class="form-label">压缩文件名</label>
+                    <input type="text" class="form-control" id="attachmentExportZipName" placeholder="请输入压缩文件名">
+                  </div>
+                </div>
+
+                <div class="export-config-section">
+                  <h5 class="section-title">筛选导出记录</h5>
+
+                  <!-- 条件组合关系 -->
+                  <div class="form-group mb-4">
+                    <label class="form-label">条件组合关系</label>
+                    <select id="attachmentExportFilterConjunction" class="form-select" style="width: auto; max-width: 250px;">
+                      <option value="AND">满足所有条件</option>
+                      <option value="OR">满足任一条件</option>
+                    </select>
+                  </div>
+
+                  <!-- 筛选条件 -->
+                  <div class="filter-conditions" id="attachmentExportFilterConditions">
+                    <!-- 动态添加的筛选条件行 -->
+                  </div>
+                  <div class="add-condition-container">
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="addAttachmentExportConditionBtn">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
+                        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
+                      </svg>
+                      添加筛选条件
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 导出按钮 -->
+                <div class="export-actions">
+                  <button type="button" class="btn btn-primary" id="exportAttachmentBtn" disabled>
+                    开始导出附件
+                  </button>
+                </div>
+
+                <!-- 导出进度 -->
+                <div class="export-progress mt-3" id="attachmentExportProgress" style="display: none;">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                  </div>
+                  <div class="progress-text mt-2">
+                    <span id="attachmentExportProgressText">准备导出...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+        </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+</body>
+
+</html>
